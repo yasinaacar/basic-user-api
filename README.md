@@ -20,7 +20,7 @@ User API Node JS öğrenme sürecinde geliştirdiğim ve geliştireceğim başka
      ```npm i jsonwebtoken@89.0.2```
 7. #### [Mongoose](https://mongoosejs.com/docs/guide.html)
      ```npm i mongoose@8.3.1```    
-8. #### [Nodemoon](npm i nodemon)
+8. #### [Nodemoon](https://www.npmjs.com/package/nodemon)
      ```npm i nodemon@.3.1.0 --save-dev```    
 
 ## Proje Kurulumu :
