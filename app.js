@@ -1,3 +1,4 @@
+require("express-async-errors");
 const express=require("express");
 const app=express();
 
@@ -12,6 +13,9 @@ require("./src/startup/routes")(app);
 (async ()=>{
     await require("./src/db/dbConnection")();
 })();
+
+//catch errors
+app.use(require("./src/middlewares/errorHandler"));
 
 const port= process.env.PORT || 5000;
 
