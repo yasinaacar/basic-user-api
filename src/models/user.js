@@ -38,7 +38,7 @@ const userSchema=new mongoose.Schema({
         type: Boolean,
         default: false
     }
-});
+},{timestamps: true});
 
 //create model
 const User=mongoose.model("User",userSchema);
@@ -56,13 +56,5 @@ function validateUserForRegister(user){
     return schema.validate(user);
 };
 
-function validateUserForLogin(user){
-    const schema=Joi.object({
-        email: Joi.string().email().required(),
-        password: Joi.string().required()
-    });
 
-    return schema.validate(user);
-};
-
-module.exports={User, validateUserForRegister, validateUserForLogin};
+module.exports={User};
