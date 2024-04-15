@@ -3,7 +3,7 @@ const authController=require("../controllers/authController");
 
 //middlewares
 const AuthValidation=require("../middlewares/validations/authValidations");
-const isAuth=require("../middlewares/isAuth");
+const {isAuth}=require("../middlewares/isAccess");
 
 const router=express.Router();
 
@@ -12,6 +12,6 @@ router.put("/activate-user/:token", authController.activate_user);
 router.post("/login", AuthValidation.login, authController.post_login);
 router.put("/forget-password", AuthValidation.forgetPassword, authController.forget_password);
 router.put("/reset-password/:resetToken", AuthValidation.resetPassword, authController.reset_password);
-router.get("/account", isAuth.verifyToken, authController.account);
+router.get("/account",isAuth, authController.account);
 
 module.exports=router;

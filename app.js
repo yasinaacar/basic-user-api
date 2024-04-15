@@ -1,10 +1,18 @@
 require("express-async-errors");
 const express=require("express");
+const mongoSanitize = require('express-mongo-sanitize');
 const app=express();
 
 require("dotenv").config();
 
 app.use(express.json());
+
+// Or, to replace these prohibited characters with _, use:
+app.use(
+    mongoSanitize({
+      replaceWith: '_',
+    }),
+  );
 
 //router
 require("./src/startup/routes")(app);

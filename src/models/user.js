@@ -1,5 +1,4 @@
 const mongoose=require("mongoose");
-const Joi=require("joi");
 
 //create schema
 const userSchema=new mongoose.Schema({
@@ -37,24 +36,20 @@ const userSchema=new mongoose.Schema({
     isActive:{
         type: Boolean,
         default: false
-    }
+    },
+    roles:[{
+        roleRef:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Role" 
+        },
+        roleName:{
+            type: String
+        }
+    }]
 },{timestamps: true});
 
 //create model
 const User=mongoose.model("User",userSchema);
-
-//validation with Joi
-function validateUserForRegister(user){
-    const schema=Joi.object({
-        name: Joi.string().min(2).max(50).required(),
-        surname: Joi.string().min(2).max(50).required(),
-        email: Joi.string().email().required(),
-        phone: Joi.number().required(),
-        password: Joi.string().min(6).required()
-    });
-
-    return schema.validate(user);
-};
 
 
 module.exports={User};

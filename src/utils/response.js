@@ -11,7 +11,12 @@ class Response{
             message: this.message ?? "Transaction successful",
         });
     };
-
+    deleted(res){
+        return res.status(200).json({
+            success: true,
+            message: this.message ?? "Deleted successfully"
+        })
+    };
     created(res){
         return res.status(201).json({
             success:true,

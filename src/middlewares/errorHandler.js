@@ -9,6 +9,7 @@ const errorHandler=(err, req, res, next)=>{
     };
 
     console.log(err)
+    
     return res.status(500).json({
         success: false,
         message: `An error was encountered, please check your API`

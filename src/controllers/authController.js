@@ -1,10 +1,11 @@
 const {User}=require("../models/user");
+const Role=require("../models/role");
 const bcrypt=require("bcrypt");
 const {APIError, Response}=require("../utils/index");
 const crypto=require("crypto");
 const sendMail=require("../helpers/mail-sender");
 const moment = require("moment");
-const { createToken } = require("../middlewares/isAuth");
+const { createToken } = require("../helpers/token-transactions");
 
 exports.post_register=async (req,res)=>{
     const {name, surname, email, phone, password}=req.body;
@@ -24,6 +25,14 @@ exports.post_register=async (req,res)=>{
     const tokenExpiration=Date.now() + 1000*60*30;
     user.token=token;
     user.tokenExpiration=tokenExpiration;
+    const customerRole=await Role.findOne({roleName: "customer"}).select("_id roleName");
+    if(customerRole){
+        user.roles.push(customerRole);
+        user.roles.rolename=customerRole.roleName;
+
+    }else{
+        console.log("Kullanıcıya rol eklenemedi çünkü rol bulunamadı");
+    }
     await user.save()
         .then((data)=>{
             sendMail({
@@ -123,7 +132,6 @@ exports.forget_password=async (req,res)=>{
 };
 exports.reset_password=async (req,res)=>{
     const resetToken=req.params.resetToken;
-    console.log("Rset Password is running",resetToken)
     const user=await User.findOne({token: resetToken}).select("token tokenExpiration password");
 
     if(!user){
