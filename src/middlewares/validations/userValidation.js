@@ -32,7 +32,7 @@ async function validateUserEdit(req,res,next){
         }).validateAsync(req.body);
     } catch (err) {
         console.log(err)
-        throw new APIError(err.detalis[0].message);
+        throw new APIError(err.details[0].message);
     }
 
     next()

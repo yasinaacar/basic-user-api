@@ -5,6 +5,7 @@ const {Response, APIError}=require("../utils/index");
 exports.edit_user=async (req,res)=>{
     const userId=req.params.userId;
     const user=await User.findById(userId);
+
     if(!user){
         return new Response(null, "User not found").error404(res);
     }
@@ -12,19 +13,20 @@ exports.edit_user=async (req,res)=>{
     user.name=name;
     user.surname=surname;
     user.phone=phone;
-    user.roles=[];
+    let rolesToAdd=[];
     for (const roleId of roleIds) {
-        const role=await Role.findByIdAndUpdate(roleId,{$pull:{users: userId}}).select("id roleName users");
-        console.log(role)
+        const role=await Role.findById(roleId).select("_id roleName users");
         if(role){
-            user.roles.push(role);
-            user.roles.rolename=role.roleName;
-            role.users.push(user);
-            await role.save();
+            rolesToAdd.push(role);
         }else{
-            continue;
+         return new Response(null,`Role not found`).error404(res)
         }
     };
+    user.roles=[];
+    for (const roleToAdd of rolesToAdd) {
+        user.roles.push(roleToAdd);
+        user.roles.rolename=roleToAdd.roleName;
+    }
     await user.save()
         .then((data)=>{
             return new Response(data,"User is edited successfully").success(res);

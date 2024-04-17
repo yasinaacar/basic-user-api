@@ -6,13 +6,11 @@ async function createToken(user,res){
         sub: user._id,
         name: user.name
     };
-
     const token=await jwt.sign(payload,process.env.JWT_SECRET_KEY,{
         algorithm: "HS512",
         expiresIn: process.env.JWT_EXPIRES_IN
     });
-    console.log("Deneme",moment(token.iat));
-    console.log(moment(token.expiresIn));
+
     return new Response({token: token}, null).success(res);
 };
 

@@ -27,25 +27,25 @@ exports.update_role=async (req,res)=>{
     } 
     let roleName=role.roleName;
     console.log(roleName, roleName=="customer")
-    if(roleName!="admin" || roleName!="customer"){
-        roleName=req.body.roleName.toLowerCase();
-        const url=slugfield(roleName);
-        role.roleName=roleName;
-        role.url=url;
-
+    if(roleName=="customer" || roleName=="admin"){
+        return new Response(null,`The Role named ${role.roleName} can not edit`).error400(res);
     }
+    roleName=req.body.roleName.toLowerCase();
+    const url=slugfield(roleName);
+    role.roleName=roleName;
+    role.url=url;
    
-    // if(role.users.length>0){
-    //     //take the users by roleId to change role name
-    //     const users=await User.find({"roles._id": roleId}).select("_id roles");
+    if(role.users.length>0){
+        //take the users by roleId to change role name
+        const users=await User.find({"roles._id": roleId}).select("_id roles");
 
-    //     for (const user of users) {
-    //         //filter by roleId from user roles
-    //         const roleToUpdate=user.roles.filter(filteredRole => filteredRole._id==roleId); //the role to update for the user
-    //         roleToUpdate[0].roleName=roleName;
-    //         await user.save()
-    //     }
-    // }
+        for (const user of users) {
+            //filter by roleId from user roles
+            const roleToUpdate=user.roles.filter(filteredRole => filteredRole._id==roleId); //the role to update for the user
+            roleToUpdate[0].roleName=roleName;
+            await user.save()
+        }
+    }
     await role.save()
     .then((data)=>{
             return new Response(data,`Role "${role._id}" has been updated successfully`).success(res);
